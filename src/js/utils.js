@@ -548,7 +548,7 @@ export function buildOuJson(chunk) {
     $.each(chunk, function(_, ou) {
         let guid = ou.Guid;
         let properties = ou.Properties;
-        
+
         let links = ou.Links;
         $.each(links, function (_, link) {
             let enforced = link.IsEnforced;
@@ -657,6 +657,7 @@ export function buildUserJson(chunk) {
         let name = user.Name;
         let properties = user.Properties;
         let primarygroup = user.PrimaryGroup;
+        let spns = user.Properties.serviceprincipalnames;
 
         if (!queries.properties) {
             if (primarygroup === null) {
@@ -673,6 +674,25 @@ export function buildUserJson(chunk) {
                 };
             }
         }
+
+        // Add HasSPNConfigured Relation
+        $.each(spns, function(_, account) {
+            let domain = name.split("@")[1].toUpperCase();
+            let compName = account.toUpperCase().split('/')[1].split(':')[0];
+
+            if (!compName.includes(domain)) {
+              compName = compName + "." + domain;
+            }
+
+            let rel = "HasSPNConfigured";
+
+            let hash = rel + name + compName + account;
+
+            let baseQuery = "UNWIND {props} AS prop MERGE (n:User {name:prop.user}) MERGE (m:Computer {name:prop.comp}) MERGE (m)-[r:HasSPNConfigured {isacl: false}]->(n)";
+            let statement = baseQuery;
+            let p = { user: name, comp: compName };
+            insert(queries, hash, statement, p);
+        });
 
         queries.properties.props.push({
             map: properties,

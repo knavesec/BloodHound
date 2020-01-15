@@ -142,6 +142,7 @@ global.appStore = {
             AdminTo: 'tapered',
             MemberOf: 'tapered',
             HasSession: 'tapered',
+            HasSPNConfigured: 'tapered',
             AllExtendedRights: 'tapered',
             ForceChangePassword: 'tapered',
             GenericAll: 'tapered',
@@ -178,6 +179,7 @@ global.appStore = {
             AdminTo: 'line',
             MemberOf: 'line',
             HasSession: 'line',
+            HasSPNConfigured: 'line',
             AllExtendedRights: 'line',
             ForceChangePassword: 'line',
             GenericAll: 'line',
@@ -275,6 +277,7 @@ if (typeof conf.get('edgeincluded') === 'undefined') {
     conf.set('edgeincluded', {
         MemberOf: true,
         HasSession: true,
+        HasSPNConfigured: true,
         AdminTo: true,
         AllExtendedRights: true,
         AddMember: true,
@@ -309,6 +312,11 @@ const alertOptions = {
 
 appStore.edgeincluded = conf.get('edgeincluded');
 //Code to add new edges to filter
+if (!appStore.edgeincluded.hasOwnProperty('HasSPNConfigured')) {
+    appStore.edgeincluded.HasSPNConfigured = true;
+    conf.set('edgeincluded', appStore.edgeincluded);
+}
+
 if (!appStore.edgeincluded.hasOwnProperty('AddAllowedToAct')) {
     appStore.edgeincluded.AddAllowedToAct = true;
     conf.set('edgeincluded', appStore.edgeincluded);

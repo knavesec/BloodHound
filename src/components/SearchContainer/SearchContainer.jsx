@@ -276,6 +276,7 @@ export default class SearchContainer extends Component {
             current.MemberOf = false;
             current.HasSession = false;
             current.AdminTo = false;
+            current.HasSPNConfigured = false;
         } else if (section === 'acl') {
             current.AllExtendedRights = false;
             current.AddMember = false;
@@ -309,6 +310,7 @@ export default class SearchContainer extends Component {
             current.MemberOf = true;
             current.HasSession = true;
             current.AdminTo = true;
+            current.HasSPNConfigured = true;
         } else if (section === 'acl') {
             current.AllExtendedRights = true;
             current.AddMember = true;
@@ -561,6 +563,22 @@ export default class SearchContainer extends Component {
                         >
                             {' '}
                             HasSession
+                        </label>
+                    </div>
+                    <div>
+                        <input
+                            className='checkbox-inline'
+                            type='checkbox'
+                            name='HasSPNConfigured'
+                            checked={this.state.edgeincluded.HasSPNConfigured}
+                            onChange={this.handleChange.bind(this)}
+                        />
+                        <label
+                            onClick={this.handleChange.bind(this)}
+                            name='HasSPNConfigured'
+                        >
+                            {' '}
+                            HasSPNConfigured
                         </label>
                     </div>
                     <div>
